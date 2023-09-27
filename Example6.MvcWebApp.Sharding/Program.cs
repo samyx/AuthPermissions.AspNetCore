@@ -38,7 +38,7 @@ builder.Services.AddControllersWithViews()
 
 builder.Services.RegisterAuthPermissions<Example6Permissions>(options =>
 {
-    options.TenantType = TenantTypes.SingleLevel;
+    options.TenantType = TenantTypes.HierarchicalTenant;
     options.EncryptionKey = builder.Configuration[nameof(AuthPermissionsOptions.EncryptionKey)];
     options.PathToFolderToLock = builder.Environment.WebRootPath;
     options.SecondPartOfShardingFile = builder.Environment.EnvironmentName;
@@ -54,21 +54,21 @@ builder.Services.RegisterAuthPermissions<Example6Permissions>(options =>
     .RegisterTenantChangeService<ShardingTenantChangeService>()
     .AddRolesPermissionsIfEmpty(Example6AppAuthSetupData.RolesDefinition)
     .AddTenantsIfEmpty(Example6AppAuthSetupData.TenantDefinition)
-    .AddAuthUsersIfEmpty(Example6AppAuthSetupData.UsersRolesDefinition)
+    //.AddAuthUsersIfEmpty(Example6AppAuthSetupData.UsersRolesDefinition)
     .RegisterFindUserInfoService<IndividualAccountUserLookup>()
     .RegisterAuthenticationProviderReader<SyncIndividualAccountUsers>()
     .AddSuperUserToIndividualAccounts()
     .SetupAspNetCoreAndDatabase(options =>
     {
         //Migrate individual account database
-        options.RegisterServiceToRunInJob<StartupServiceMigrateAnyDbContext<ApplicationDbContext>>();
+        //options.RegisterServiceToRunInJob<StartupServiceMigrateAnyDbContext<ApplicationDbContext>>();
         //Add demo users to the database (if no individual account exist)
         options.RegisterServiceToRunInJob<StartupServicesIndividualAccountsAddDemoUsers>();
 
         //Migrate the application part of the database
-        options.RegisterServiceToRunInJob<StartupServiceMigrateAnyDbContext<ShardingSingleDbContext>>();
+        //options.RegisterServiceToRunInJob<StartupServiceMigrateAnyDbContext<ShardingSingleDbContext>>();
         //This seeds the invoice database (if empty)
-        options.RegisterServiceToRunInJob<StartupServiceSeedShardingDbContext>();
+        //options.RegisterServiceToRunInJob<StartupServiceSeedShardingDbContext>();
     });
 
 //This is used for a) hold the sharding entries and b) to set a tenant as "Down",

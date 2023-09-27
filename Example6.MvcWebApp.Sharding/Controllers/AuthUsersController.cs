@@ -24,7 +24,8 @@ namespace Example6.MvcWebApp.Sharding.Controllers
         public async Task<ActionResult> Index(string message)
         {
             var authDataKey = User.GetAuthDataKeyFromUser();
-            var userQuery = _authUsersAdmin.QueryAuthUsers(authDataKey);
+            var authDatabaseName = User.GetDatabaseInfoNameFromUser();
+            var userQuery = _authUsersAdmin.QueryAuthUsers(authDataKey, authDatabaseName);
             var usersToShow = await AuthUserDisplay.TurnIntoDisplayFormat(userQuery.OrderBy(x => x.Email)).ToListAsync();
 
             ViewBag.Message = message;
